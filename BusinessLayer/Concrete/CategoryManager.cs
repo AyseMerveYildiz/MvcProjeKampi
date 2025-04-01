@@ -1,4 +1,6 @@
-﻿using DataaAccessLayer.Concrete.Repositories;
+﻿using BusinessLayer.Abstract;
+using DataaAccessLayer.Abstract;
+using DataaAccessLayer.Concrete.Repositories;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -8,25 +10,53 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
-    public class CategoryManager
+    public class CategoryManager : ICategoryService
     {
-        GenericRepository<Category> repo= new GenericRepository<Category> ();
+        ICategoryDal _categoryDal;
 
-        public List<Category> GetAllBL()
+        public CategoryManager(ICategoryDal categoryDal)
         {
-            return repo.List();
+            _categoryDal = categoryDal;
         }
 
-        public void CategoryAddBL(Category p)
+        public void CategoryAdd(Category category)
         {
-            if (p.CategoryName == null || p.CategoryName.Length <= 3 || p.CategoryDescription == "" || p.CategoryName.Length >= 51)
-            {
-                //hate mesajı
-            }
-            else
-            {
-                repo.Insert(p);
-            }
+            _categoryDal.Insert(category);
         }
+
+        public void CategoryDelete(Category category)
+        {
+            _categoryDal.Delete(category);
+        }
+
+        public void CategoryUpdate(Category category)
+        {
+            _categoryDal.Update(category);
+        }
+
+        public Category GetByID(int id)
+        {
+           return _categoryDal.Get(x => x.CategoryID == id);
+        }
+
+        //public void DeleteCategory(int id)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //public Category GetCategoryById(int id)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public List<Category> GetList()
+        {
+            return _categoryDal.List();
+        }
+
+        //public void UpdateCategory(Category category)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
